@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Inmobiliaria | Diseño de Interiores & Construcción</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
+      🌙
+    </button>
+
+    <!-- Business Card -->
+    <div class="card" id="businessCard">
+
+      <!-- Header Section -->
+      <div class="card-header">
+        <div class="avatar">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=150&q=80" alt="Interior Design">
+        </div>
+        <div class="header-info">
+          <h1 id="userName">Velasco Elite Homes</h1>
+          <p class="title" id="userTitle">Mas que espacios,creamos lugares donde nacen historias..</p>
+          <p class="location" id="userLocation">📍Carrera 7 #28-66, Bogotá, Colombia</p>
+        </div>
+      </div>
+
+      <!-- Bio Section -->
+      <div class="card-section">
+        <h2>Sobre Nosotros</h2>
+        <p id="userBio" class="bio">Somos una empresa especializada en diseño de interiores, construcción y asesoría inmobiliaria. Transformamos espacios en lugares modernos, funcionales y con alto valor estético. Nuestro compromiso es ofrecer calidad, innovación y cumplimiento en cada proyecto.</p>
+      </div>
+
+      <!-- Services Section -->
+      <div class="card-section">
+        <h2>Servicios</h2>
+        <div id="skillsList" class="skills-list">Construcción y remodelación,
+ Diseño de interiores,
+Planos arquitectónicos,
+Asesoría inmobiliaria,
+ Decoración y optimización de espacios.</div>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="card-section">
+        <h2>Contacto</h2>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="icon">📧</span>
+            <span id="userEmail">velascoehomes1@gmail.com</span>
+            <button id="copyEmailBtn" class="btn btn-small">Copiar</button>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📱</span>
+            <span id="userPhone">3114791721</span>
+            <button id="copyEmailBtn" class="btn btn-small">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Media Section -->
+      <div class="card-section">
+        <h2>Redes</h2>
+        <div id="socialLinks" class="social-links"><li>👉 Facebook:
+📘 Velasco Élite Ginés</li><li> 👉TikTok:
+🎵 @velascoelitegines</li></div>
+      </div>
+
+      <!-- Statistics Section -->
+      <div class="card-section">
+        <h2>Estadísticas</h2>
+        <div id="stats" class="stats-grid">
+            <li>📍 +150 proyectos completados</li>
+            <li>👷‍♂️ 98% de satisfacción del cliente</li>
+            <li>🏆 10 años de experiencia en el sector</li>
+        
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>App Profesional de Diseño, Inmobiliaria y Construcción</p>
+      <p class="small">Proyecto Web Interactivo</p>
+    </footer>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <script src="starter/script.js"></script>
+
+</body>
+</html>
