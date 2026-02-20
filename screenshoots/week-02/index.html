@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Proyectos | Diseño Interior</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <h1>🏗️ Gestor de Proyectos</h1>
+      <p class="subtitle">Diseño de interiores · Inmobiliaria · Construcción</p>
+
+      <div class="stats-summary">
+        <span class="stat">Total: <strong id="stat-total">0</strong></span>
+        <span class="stat">Activos: <strong id="stat-active">0</strong></span>
+        <span class="stat">Finalizados: <strong id="stat-inactive">0</strong></span>
+      </div>
+    </header>
+
+    <!-- Formulario -->
+    <section class="form-section">
+      <h2>➕ Nuevo Proyecto</h2>
+
+      <form id="item-form" class="item-form">
+
+        <div class="form-group">
+          <label for="item-name">Nombre del Proyecto *</label>
+          <input type="text" id="item-name" placeholder="Ej: Remodelación apartamento" required>
+        </div>
+
+        <div class="form-group">
+          <label for="item-description">Descripción</label>
+          <textarea id="item-description" rows="3" placeholder="Detalles del proyecto"></textarea>
+        </div>
+
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="item-category">Tipo de Proyecto</label>
+            <select id="item-category">
+              <option value="interior">🛋️ Diseño Interior</option>
+              <option value="inmobiliaria">🏢 Inmobiliaria</option>
+              <option value="construccion">🏗️ Construcción</option>
+              <option value="otro">📌 Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="item-priority">Nivel de Prioridad</label>
+            <select id="item-priority">
+              <option value="low">🟢 Baja</option>
+              <option value="medium" selected>🟡 Media</option>
+              <option value="high">🔴 Alta</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">Guardar Proyecto</button>
+          <button type="button" class="btn btn-secondary" id="cancel-btn" style="display:none;">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Filtros -->
+    <section class="filters-section">
+      <div class="filters">
+
+        <div class="filter-group">
+          <label for="filter-status">Estado:</label>
+          <select id="filter-status">
+            <option value="all">Todos</option>
+            <option value="active">Activos</option>
+            <option value="inactive">Finalizados</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-category">Tipo:</label>
+          <select id="filter-category">
+            <option value="all">Todos</option>
+            <option value="interior">Diseño Interior</option>
+            <option value="inmobiliaria">Inmobiliaria</option>
+            <option value="construccion">Construcción</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-priority">Prioridad:</label>
+          <select id="filter-priority">
+            <option value="all">Todas</option>
+            <option value="high">Alta</option>
+            <option value="medium">Media</option>
+            <option value="low">Baja</option>
+          </select>
+        </div>
+
+        <div class="filter-group search-group">
+          <label for="search-input">Buscar:</label>
+          <input type="text" id="search-input" placeholder="Buscar proyecto...">
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Lista -->
+    <section class="items-section">
+
+      <div class="items-header">
+        <h2>📋 Lista de Proyectos</h2>
+      </div>
+
+      <div id="item-list" class="item-list"></div>
+
+      <div id="empty-state" class="empty-state">
+        <p>📭 No hay proyectos registrados</p>
+        <p>Crea tu primer proyecto arriba</p>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Script -->
+  <script src="starter/script.js"></script>
+
+</body>
+</html>

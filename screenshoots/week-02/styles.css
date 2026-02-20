@@ -1,0 +1,304 @@
+/* ===================================
+   Variables CSS y Reset
+   =================================== */
+
+:root {
+  --color-primary: #2563eb;
+  --color-secondary: #0ea5e9;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+  --color-dark: #1e293b;
+  --color-gray: #64748b;
+  --color-light: #f1f5f9;
+  --color-white: #ffffff;
+
+  --priority-high: #dc2626;
+  --priority-medium: #f59e0b;
+  --priority-low: #16a34a;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
+  min-height: 100vh;
+  padding: 1.5rem;
+  color: var(--color-dark);
+}
+
+/* ===================================
+   Container
+   =================================== */
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+/* ===================================
+   Header
+   =================================== */
+
+.header {
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2rem;
+}
+
+.subtitle {
+  color: var(--color-gray);
+  margin-bottom: 1rem;
+}
+
+.stats-summary {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat strong {
+  color: var(--color-primary);
+}
+
+/* ===================================
+   Form Section
+   =================================== */
+
+.form-section {
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 1.5rem;
+}
+
+.form-section h2 {
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-light);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ===================================
+   Buttons
+   =================================== */
+
+.btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  background: var(--color-gray);
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* ===================================
+   Filters
+   =================================== */
+
+.filters-section {
+  background: var(--color-white);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 1.5rem;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 1rem;
+}
+
+.filter-group label {
+  font-weight: 600;
+}
+
+/* ===================================
+   Projects List
+   =================================== */
+
+.items-section {
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Project Card */
+.project-item {
+  background: var(--color-light);
+  border-left: 5px solid var(--color-primary);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  transition: 0.2s;
+}
+
+.project-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.project-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.project-item.priority-high {
+  border-left-color: var(--priority-high);
+}
+
+.project-item.priority-medium {
+  border-left-color: var(--priority-medium);
+}
+
+.project-item.priority-low {
+  border-left-color: var(--priority-low);
+}
+
+/* ===================================
+   Empty State
+   =================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  display: none;
+  color: var(--color-gray);
+}
+
+.empty-state.show {
+  display: block;
+}
+
+/* ===================================
+   Stats Section
+   =================================== */
+
+.detailed-stats {
+  margin-top: 1.5rem;
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: var(--color-light);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.stat-card p {
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+/* ===================================
+   Responsive
+   =================================== */
+
+@media (max-width: 768px) {
+  .items-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
