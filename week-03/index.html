@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velasco Elite Homes | Sistema de Gestión</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-container">
+
+      <!-- Header -->
+      <header class="header">
+        <h1>🏗️ Velasco Elite Homes</h1>
+        <p class="subtitle">
+          Diseño de Interiores · Construcción · Asesoría Inmobiliaria
+        </p>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="projects">
+          🏢 Proyectos
+        </button>
+        <button class="tab-btn" data-tab="clients">
+          🤝 Clientes
+        </button>
+        <button class="tab-btn" data-tab="activities">
+          📑 Actividades
+        </button>
+        <button class="tab-btn" data-tab="stats">
+          📊 Estadísticas
+        </button>
+      </nav>
+
+      <!-- Tab Content -->
+      <main class="tab-content">
+
+        <!-- PROYECTOS -->
+        <section id="projects" class="tab-panel active">
+          <div class="panel-header">
+            <h2>Gestión de Proyectos</h2>
+            <div class="actions">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar proyecto..."
+              />
+              <select id="filter-type">
+                <option value="all">Todos los servicios</option>
+                <option value="Interior">Diseño de Interiores</option>
+                <option value="Construction">Construcción</option>
+                <option value="RealEstate">Asesoría Inmobiliaria</option>
+              </select>
+              <select id="filter-status">
+                <option value="all">Todos los estados</option>
+                <option value="active">En ejecución</option>
+                <option value="completed">Finalizado</option>
+                <option value="paused">En pausa</option>
+              </select>
+              <button id="add-item-btn" class="btn btn-primary">
+                + Nuevo Proyecto
+              </button>
+            </div>
+          </div>
+
+          <div id="item-list" class="items-grid"></div>
+
+          <div id="empty-state" class="empty-state" style="display:none;">
+            <p>No hay proyectos registrados</p>
+            <p class="hint">
+              Agrega tu primer proyecto de diseño, construcción o asesoría.
+            </p>
+          </div>
+        </section>
+
+        <!-- CLIENTES -->
+        <section id="clients" class="tab-panel">
+          <div class="panel-header">
+            <h2>Gestión de Clientes</h2>
+            <div class="actions">
+              <input
+                type="text"
+                id="search-users"
+                placeholder="Buscar cliente..."
+              />
+              <select id="filter-role">
+                <option value="all">Todos</option>
+                <option value="Residential">Residencial</option>
+                <option value="Commercial">Comercial</option>
+                <option value="Investor">Inversionista</option>
+              </select>
+              <button id="add-user-btn" class="btn btn-primary">
+                + Nuevo Cliente
+              </button>
+            </div>
+          </div>
+          <div id="user-list" class="users-grid"></div>
+        </section>
+
+        <!-- ACTIVIDADES -->
+        <section id="activities" class="tab-panel">
+          <div class="panel-header">
+            <h2>Historial de Actividades</h2>
+          </div>
+          <div id="transaction-list" class="transactions-list">
+            <!-- Aquí se registran:
+                 - Avances de obra
+                 - Entregas
+                 - Visitas técnicas
+                 - Pagos recibidos
+                 - Reuniones con clientes
+            -->
+          </div>
+        </section>
+
+        <!-- ESTADÍSTICAS -->
+        <section id="stats" class="tab-panel">
+          <div class="panel-header">
+            <h2>Resumen General</h2>
+          </div>
+
+          <div id="stats-container" class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-value" id="stat-total">150+</span>
+              <span class="stat-label">Proyectos Completados</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="stat-active">98%</span>
+              <span class="stat-label">Satisfacción del Cliente</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="stat-experience">10</span>
+              <span class="stat-label">Años de Experiencia</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="stat-clients">+</span>
+              <span class="stat-label">Clientes Activos</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- MODAL PROYECTO -->
+      <div id="item-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Nuevo Proyecto</h3>
+            <button class="close-btn" id="close-modal">&times;</button>
+          </div>
+
+          <form id="item-form" class="modal-form">
+
+            <div class="form-group">
+              <label for="item-type">Tipo de Servicio</label>
+              <select id="item-type" required>
+                <option value="">Selecciona</option>
+                <option value="Interior">Diseño de Interiores</option>
+                <option value="Construction">Construcción</option>
+                <option value="RealEstate">Asesoría Inmobiliaria</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="item-name">Nombre del Proyecto *</label>
+              <input type="text" id="item-name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="item-location">Ubicación *</label>
+              <input type="text" id="item-location" placeholder="Bogotá, Colombia" required />
+            </div>
+
+            <div class="form-group">
+              <label for="project-budget">Presupuesto Estimado</label>
+              <input type="number" id="project-budget" />
+            </div>
+
+            <div class="form-group">
+              <label for="project-deadline">Fecha de Entrega</label>
+              <input type="date" id="project-deadline" />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" id="cancel-btn">
+                Cancelar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- MODAL CLIENTE -->
+      <div id="user-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Nuevo Cliente</h3>
+            <button class="close-btn" id="close-user-modal">&times;</button>
+          </div>
+
+          <form id="user-form" class="modal-form">
+
+            <div class="form-group">
+              <label for="user-role">Tipo de Cliente</label>
+              <select id="user-role" required>
+                <option value="">Selecciona</option>
+                <option value="Residential">Residencial</option>
+                <option value="Commercial">Comercial</option>
+                <option value="Investor">Inversionista</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="user-name">Nombre *</label>
+              <input type="text" id="user-name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="user-email">Correo Electrónico *</label>
+              <input type="email" id="user-email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="user-phone">Teléfono</label>
+              <input type="text" id="user-phone" />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" id="cancel-user-btn">
+                Cancelar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="starte/script.js"></script>
+  </body>
+</html>

@@ -1,336 +1,185 @@
-// ============================================
-// ESTADO GLOBAL
-// ============================================
+// ===============================
+// CONFIGURACIÓN INICIAL
+// ===============================
 
-let items = [];
-let editingItemId = null;
+let projects = JSON.parse(localStorage.getItem("projects")) || [];
 
-// ============================================
-// CATEGORÍAS DEL DOMINIO
-// ============================================
+const form = document.getElementById("item-form");
+const list = document.getElementById("item-list");
+const emptyState = document.getElementById("empty-state");
 
-const CATEGORIES = {
-  interior: { name: 'Diseño Interior', emoji: '🛋️' },
-  inmobiliaria: { name: 'Inmobiliaria', emoji: '🏠' },
-  construccion: { name: 'Construcción', emoji: '🏗️' },
-  remodelacion: { name: 'Remodelación', emoji: '🔨' }
-};
+const statTotal = document.getElementById("stat-total");
+const statActive = document.getElementById("stat-active");
+const statInactive = document.getElementById("stat-inactive");
 
-const PRIORITIES = {
-  high: { name: 'Alta', color: '#dc2626' },
-  medium: { name: 'Media', color: '#f59e0b' },
-  low: { name: 'Baja', color: '#16a34a' },
-};
+const filterStatus = document.getElementById("filter-status");
+const filterCategory = document.getElementById("filter-category");
+const filterPriority = document.getElementById("filter-priority");
+const searchInput = document.getElementById("search-input");
 
-// ============================================
-// PERSISTENCIA
-// ============================================
+const cancelBtn = document.getElementById("cancel-btn");
+const submitBtn = document.getElementById("submit-btn");
 
-const loadItems = () =>
-  JSON.parse(localStorage.getItem('interiorProjects') ?? '[]');
+let editId = null;
 
-const saveItems = itemsToSave =>
-  localStorage.setItem('interiorProjects', JSON.stringify(itemsToSave));
+// ===============================
+// FUNCIONES PRINCIPALES
+// ===============================
 
-// ============================================
-// CRUD
-// ============================================
+function saveProjects() {
+  localStorage.setItem("projects", JSON.stringify(projects));
+}
 
-const createItem = (itemData = {}) => {
-  const newItem = {
-    id: Date.now(),
-    name: itemData.name ?? '',
-    description: itemData.description ?? '',
-    category: itemData.category ?? 'interior',
-    priority: itemData.priority ?? 'medium',
-    active: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: null
-  };
+function updateStats() {
+  statTotal.textContent = projects.length;
+  statActive.textContent = projects.filter(p => p.active).length;
+  statInactive.textContent = projects.filter(p => !p.active).length;
+}
 
-  const newItems = [...items, newItem];
-  saveItems(newItems);
-  return newItems;
-};
+function renderProjects() {
+  list.innerHTML = "";
 
-const updateItem = (id, updates) => {
-  const updatedItems = items.map(item =>
-    item.id === id
-      ? { ...item, ...updates, updatedAt: new Date().toISOString() }
-      : item
-  );
-  saveItems(updatedItems);
-  return updatedItems;
-};
+  let filtered = [...projects];
 
-const deleteItem = id => {
-  const filtered = items.filter(item => item.id !== id);
-  saveItems(filtered);
-  return filtered;
-};
+  const status = filterStatus.value;
+  const category = filterCategory.value;
+  const priority = filterPriority.value;
+  const search = searchInput.value.toLowerCase();
 
-const toggleItemActive = id => {
-  const updated = items.map(item =>
-    item.id === id
-      ? { ...item, active: !item.active, updatedAt: new Date().toISOString() }
-      : item
-  );
-  saveItems(updated);
-  return updated;
-};
-
-const clearInactive = () => {
-  const activeItems = items.filter(item => item.active);
-  saveItems(activeItems);
-  return activeItems;
-};
-
-// ============================================
-// FILTROS
-// ============================================
-
-const filterByStatus = (itemsToFilter, status = 'all') => {
-  if (status === 'active') return itemsToFilter.filter(i => i.active);
-  if (status === 'inactive') return itemsToFilter.filter(i => !i.active);
-  return itemsToFilter;
-};
-
-const filterByCategory = (itemsToFilter, category = 'all') =>
-  category === 'all'
-    ? itemsToFilter
-    : itemsToFilter.filter(i => i.category === category);
-
-const filterByPriority = (itemsToFilter, priority = 'all') =>
-  priority === 'all'
-    ? itemsToFilter
-    : itemsToFilter.filter(i => i.priority === priority);
-
-const searchItems = (itemsToFilter, query = '') => {
-  if (!query.trim()) return itemsToFilter;
-  const q = query.toLowerCase();
-  return itemsToFilter.filter(i =>
-    i.name.toLowerCase().includes(q) ||
-    (i.description ?? '').toLowerCase().includes(q)
-  );
-};
-
-const applyFilters = (itemsToFilter, filters = {}) => {
-  const {
-    status = 'all',
-    category = 'all',
-    priority = 'all',
-    search = ''
-  } = filters;
-
-  return searchItems(
-    filterByPriority(
-      filterByCategory(
-        filterByStatus(itemsToFilter, status),
-        category
-      ),
-      priority
-    ),
-    search
-  );
-};
-
-// ============================================
-// ESTADÍSTICAS
-// ============================================
-
-const getStats = (itemsToAnalyze = []) => {
-  const total = itemsToAnalyze.length;
-  const active = itemsToAnalyze.filter(i => i.active).length;
-  const inactive = total - active;
-
-  const byCategory = itemsToAnalyze.reduce((acc, item) => {
-    acc[item.category] = (acc[item.category] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  const byPriority = itemsToAnalyze.reduce((acc, item) => {
-    acc[item.priority] = (acc[item.priority] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  return { total, active, inactive, byCategory, byPriority };
-};
-
-// ============================================
-// RENDER
-// ============================================
-
-const getCategoryEmoji = category =>
-  CATEGORIES[category]?.emoji ?? '📌';
-
-const formatDate = date =>
-  new Date(date).toLocaleDateString('es-CO');
-
-const renderItem = item => {
-  const { id, name, description, category, priority, active, createdAt } = item;
-
-  return `
-    <div class="project-item ${!active ? 'completed' : ''} priority-${priority}" data-item-id="${id}">
-      <input type="checkbox" class="item-checkbox" ${active ? 'checked' : ''}>
-      <div>
-        <h3>${name}</h3>
-        ${description ? `<p>${description}</p>` : ''}
-        <div>
-          <span>${getCategoryEmoji(category)} ${CATEGORIES[category].name}</span> |
-          <span>${PRIORITIES[priority].name}</span> |
-          <span>📅 ${formatDate(createdAt)}</span>
-        </div>
-      </div>
-      <div class="task-actions">
-        <button class="btn-edit">✏️</button>
-        <button class="btn-delete">🗑️</button>
-      </div>
-    </div>
-  `;
-};
-
-const renderItems = itemsToRender => {
-  const list = document.getElementById('item-list');
-  const empty = document.getElementById('empty-state');
-
-  if (itemsToRender.length === 0) {
-    list.innerHTML = '';
-    empty.style.display = 'block';
-  } else {
-    empty.style.display = 'none';
-    list.innerHTML = itemsToRender.map(renderItem).join('');
+  if (status !== "all") {
+    filtered = filtered.filter(p => status === "active" ? p.active : !p.active);
   }
-};
 
-const renderStats = stats => {
-  document.getElementById('stat-total').textContent = stats.total;
-  document.getElementById('stat-active').textContent = stats.active;
-  document.getElementById('stat-inactive').textContent = stats.inactive;
+  if (category !== "all") {
+    filtered = filtered.filter(p => p.category === category);
+  }
 
-  const detail = document.getElementById('stats-details');
+  if (priority !== "all") {
+    filtered = filtered.filter(p => p.priority === priority);
+  }
 
-  detail.innerHTML = Object.entries(stats.byCategory)
-    .map(([cat, count]) =>
-      `<div class="stat-card"><h4>${CATEGORIES[cat].name}</h4><p>${count}</p></div>`
-    ).join('');
-};
+  if (search) {
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(search) ||
+      p.description.toLowerCase().includes(search)
+    );
+  }
 
-// ============================================
+  if (filtered.length === 0) {
+    emptyState.style.display = "block";
+  } else {
+    emptyState.style.display = "none";
+  }
+
+  filtered.forEach(project => {
+    const div = document.createElement("div");
+    div.className = "item-card";
+
+    div.innerHTML = `
+      <h3>${project.name}</h3>
+      <p>${project.description || "Sin descripción"}</p>
+      <div class="item-meta">
+        <span>📂 ${project.category}</span>
+        <span>⚡ ${project.priority}</span>
+        <span>${project.active ? "🟢 Activo" : "⚪ Finalizado"}</span>
+      </div>
+      <div class="item-actions">
+        <button onclick="toggleStatus('${project.id}')">🔄</button>
+        <button onclick="editProject('${project.id}')">✏️</button>
+        <button onclick="deleteProject('${project.id}')">🗑️</button>
+      </div>
+    `;
+
+    list.appendChild(div);
+  });
+
+  updateStats();
+  saveProjects();
+}
+
+// ===============================
 // EVENTOS
-// ============================================
+// ===============================
 
-const handleFormSubmit = e => {
+form.addEventListener("submit", e => {
   e.preventDefault();
 
-  const name = document.getElementById('item-name').value.trim();
-  const description = document.getElementById('item-description').value.trim();
-  const category = document.getElementById('item-category').value;
-  const priority = document.getElementById('item-priority').value;
+  const name = document.getElementById("item-name").value.trim();
+  const description = document.getElementById("item-description").value.trim();
+  const category = document.getElementById("item-category").value;
+  const priority = document.getElementById("item-priority").value;
 
-  if (!name) return alert('El nombre es obligatorio');
+  if (!name) return;
 
-  const data = { name, description, category, priority };
+  if (editId) {
+    const project = projects.find(p => p.id === editId);
+    project.name = name;
+    project.description = description;
+    project.category = category;
+    project.priority = priority;
+    editId = null;
+    submitBtn.textContent = "Guardar Proyecto";
+    cancelBtn.style.display = "none";
+  } else {
+    projects.push({
+      id: Date.now().toString(),
+      name,
+      description,
+      category,
+      priority,
+      active: true,
+      created: new Date()
+    });
+  }
 
-  items = editingItemId
-    ? updateItem(editingItemId, data)
-    : createItem(data);
-
-  resetForm();
-  renderItems(applyCurrentFilters());
-  renderStats(getStats(items));
-};
-
-const handleItemToggle = id => {
-  items = toggleItemActive(id);
-  renderItems(applyCurrentFilters());
-  renderStats(getStats(items));
-};
-
-const handleItemEdit = id => {
-  const item = items.find(i => i.id === id);
-  if (!item) return;
-
-  document.getElementById('item-name').value = item.name;
-  document.getElementById('item-description').value = item.description ?? '';
-  document.getElementById('item-category').value = item.category;
-  document.getElementById('item-priority').value = item.priority;
-
-  document.getElementById('form-title').textContent = '✏️ Editar Proyecto';
-  document.getElementById('submit-btn').textContent = 'Actualizar';
-  document.getElementById('cancel-btn').style.display = 'inline-block';
-
-  editingItemId = id;
-};
-
-const handleItemDelete = id => {
-  if (!confirm('¿Eliminar este proyecto?')) return;
-  items = deleteItem(id);
-  renderItems(applyCurrentFilters());
-  renderStats(getStats(items));
-};
-
-const getCurrentFilters = () => ({
-  status: document.getElementById('filter-status').value,
-  category: document.getElementById('filter-category').value,
-  priority: document.getElementById('filter-priority').value,
-  search: document.getElementById('search-input').value
+  form.reset();
+  renderProjects();
 });
 
-const applyCurrentFilters = () =>
-  applyFilters(items, getCurrentFilters());
+cancelBtn.addEventListener("click", () => {
+  form.reset();
+  editId = null;
+  submitBtn.textContent = "Guardar Proyecto";
+  cancelBtn.style.display = "none";
+});
 
-const handleFilterChange = () =>
-  renderItems(applyCurrentFilters());
+filterStatus.addEventListener("change", renderProjects);
+filterCategory.addEventListener("change", renderProjects);
+filterPriority.addEventListener("change", renderProjects);
+searchInput.addEventListener("input", renderProjects);
 
-const resetForm = () => {
-  document.getElementById('item-form').reset();
-  document.getElementById('form-title').textContent = '➕ Nuevo Proyecto';
-  document.getElementById('submit-btn').textContent = 'Crear';
-  document.getElementById('cancel-btn').style.display = 'none';
-  editingItemId = null;
-};
+// ===============================
+// FUNCIONES DE ACCIÓN
+// ===============================
 
-// ============================================
-// EVENT LISTENERS
-// ============================================
+function deleteProject(id) {
+  if (!confirm("¿Eliminar este proyecto?")) return;
+  projects = projects.filter(p => p.id !== id);
+  renderProjects();
+}
 
-const attachEventListeners = () => {
-  document.getElementById('item-form').addEventListener('submit', handleFormSubmit);
-  document.getElementById('cancel-btn').addEventListener('click', resetForm);
+function toggleStatus(id) {
+  const project = projects.find(p => p.id === id);
+  project.active = !project.active;
+  renderProjects();
+}
 
-  ['filter-status', 'filter-category', 'filter-priority', 'search-input']
-    .forEach(id => document.getElementById(id).addEventListener('input', handleFilterChange));
+function editProject(id) {
+  const project = projects.find(p => p.id === id);
 
-  document.getElementById('clear-inactive').addEventListener('click', () => {
-    if (confirm('¿Eliminar proyectos inactivos?')) {
-      items = clearInactive();
-      renderItems(items);
-      renderStats(getStats(items));
-    }
-  });
+  document.getElementById("item-name").value = project.name;
+  document.getElementById("item-description").value = project.description;
+  document.getElementById("item-category").value = project.category;
+  document.getElementById("item-priority").value = project.priority;
 
-  document.getElementById('item-list').addEventListener('click', e => {
-    const el = e.target.closest('.project-item');
-    if (!el) return;
+  editId = id;
+  submitBtn.textContent = "Actualizar Proyecto";
+  cancelBtn.style.display = "inline-block";
+}
 
-    const id = Number(el.dataset.itemId);
+// ===============================
+// INICIO
+// ===============================
 
-    if (e.target.classList.contains('item-checkbox')) handleItemToggle(id);
-    if (e.target.classList.contains('btn-edit')) handleItemEdit(id);
-    if (e.target.classList.contains('btn-delete')) handleItemDelete(id);
-  });
-};
-
-// ============================================
-// INIT
-// ============================================
-
-const init = () => {
-  items = loadItems();
-  renderItems(items);
-  renderStats(getStats(items));
-  attachEventListeners();
-  console.log('✅ App de Diseño Interior inicializada');
-};
-
-document.addEventListener('DOMContentLoaded', init);
+renderProjects();
+console.log("✅ App de Diseño Interior iniciada correctamente");
